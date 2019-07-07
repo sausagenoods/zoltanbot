@@ -5,8 +5,8 @@ require "./tg.pl";
 
 sub ask_ball
 {
-    my ($token, $chat) = @_;
-
+    my ($token, $chat, $args, $id) = @_;
+   
     my @answers = (
         "It is certain.",
         "It is decidedly so.",
@@ -29,8 +29,33 @@ sub ask_ball
         "Outlook not so good.",
         "Very doubtful."
     );
-    
-    send_message($token, $chat, $answers[rand @answers]); 
+   
+    if (!defined $args) {
+        send_message($token, $chat, "Ask me something.", $id);
+    }
+    elsif ($args =~ /(what|who|when|why|whose|when|how)/) {
+        send_message($token, $chat, "Ask me a yes-no question instead.", $id);
+    }
+    else {
+    send_message($token, $chat, $answers[rand @answers], $id); 
+    }
+} 
+
+sub urban_dictionary
+{
+    my ($token, $chat, $args, $id) = @_;
+
+    if (!defined $args) {
+        send_message($token, $chat, "Nothing to look up for.", $id);
+    }
+
+    my $url = "http://api.urbandictionary.com/v0/define?term=${args}";
+    my $content = get($url);
+    my $json = decode_json($content);
+
+    my $definition = $json->{list}[0]->{definition};
+
+    send_message($token, $chat, $definition, $id);
 }
 
 1;
