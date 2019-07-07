@@ -4,6 +4,8 @@ use warnings;
 use LWP::UserAgent qw( );
 use LWP::Simple;
 
+require "./command.pl";
+
 my $base_url = "https://api.telegram.org/";
 
 sub send_message
@@ -26,10 +28,26 @@ sub get_updates
     my $json = decode_json($updates);
     
     for my $update (@{$json->{result}}) {
-        if ($update->{message}->{chat}->{id} == $chat) {
-            send_message($token, $chat, $update->{message}->{text});
+        my $message = $update->{message};
+        
+        if ($message->{chat}->{id} == $chat) {
+            if ($message->{text} =~ /^\//) {
+                command_handlers($token, $chat, $message);
+            }
             $offset = $update->{update_id}+1;
         }
+    }
+}
+
+sub command_handlers
+{
+    my ($token, $chat, $msg) = @_;
+    
+    if ($msg->{text} =~ /\/msgcount/) {
+        send_message($token, $chat, $msg->{message_id});
+    }
+    elsif ($msg->{text} =~ /\/8ball/) {
+        ask_ball($token, $chat);
     }
 }
 
