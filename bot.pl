@@ -2,16 +2,22 @@
 
 use strict;
 use warnings;
+use JSON;
 use LWP::UserAgent;
 
-require "./util.pl";
 require "./tg.pl";
 
-my $bot = load_config("config.json");
+my $json_text;
+{
+    local $/;
+    open my $fh, "<", "config.json" or die "Couldn't open config.json";
+    $json_text = <$fh>;
+    close $fh;
+}
+
+my $bot = decode_json($json_text);
 my $bot_token = $bot->{bot_token};
 my $chat_id = $bot->{chat_id};
-
-# send_message($bot_token, $chat_id, "perl");
 
 while (1) {
     get_updates($bot_token, $chat_id);

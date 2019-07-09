@@ -53,9 +53,13 @@ sub urban_dictionary
     my $content = get($url);
     my $json = decode_json($content);
 
-    my $definition = $json->{list}[0]->{definition};
-
-    send_message($token, $chat, $definition, $id);
+    if ($json->{list}[0]) {
+        my $definition = $json->{list}[0]->{definition};
+        send_message($token, $chat, $definition, $id);
+    }
+    else {
+        send_message($token, $chat, "Definition not found.", $id);
+    }
 }
 
 1;
