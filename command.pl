@@ -62,4 +62,11 @@ sub urban_dictionary
     }
 }
 
+sub suicide_prevention
+{
+    my ($token, $chat, $uname, $id) = @_;
+    my $res = "Crippling Depression is a severe case of depression Only the saddest people has this sickness.  \N{U+1F914}  @".$uname." .....May u get over it \N{U+1F64F}";
+    send_message($token, $chat, $res, $id);
+}
+
 1;

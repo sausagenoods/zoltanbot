@@ -28,34 +28,46 @@ sub get_updates
     my $json = decode_json($updates);
     
     for my $update (@{$json->{result}}) {
-        my $message = $update->{message};
         
-        if ($message->{chat}->{id} == $chat) {
-            if ($message->{entities}[0]->{type} eq "bot_command") {
-                command_handlers($token, $chat, $message);
-            }
+        my $message = $update->{message};
+        my $chat_id = $message->{chat}->{id};
+        
+        if (defined($chat_id) && $chat_id == $chat) {
+            handlers($token, $chat, $message);
+         
             $offset = $update->{update_id}+1;
         }
     }
 }
 
-sub command_handlers
+sub handlers
 {
     my ($token, $chat, $msg) = @_;
-    my ($cmd, $args) = split(' ', $msg->{text}, 2);
+
     my $id = $msg->{message_id};
-    
-    if ($cmd =~ /\/msgcount/) {
-        send_message($token, $chat, $id, $id);
-    }
-    elsif ($cmd =~ /\/8ball/) {
-        ask_ball($token, $chat, $args, $id);
-    }
-    elsif ($cmd =~ /\/(ud|urbandict|dictionary)/) {
-        urban_dictionary($token, $chat, $args, $id);
-    }
-    else {
-        send_message($token, $chat, "Unknown command.", $id);
+    my $type = $msg->{entities}[0]->{type};
+    my $text = $msg->{text};
+
+    if (defined($type) && $type eq "bot_command") {
+
+        my ($cmd, $args) = split(' ', $text, 2);
+        
+        if ($cmd =~ /^\/msgcount$/) {
+            send_message($token, $chat, $id, $id);
+        }
+        elsif ($cmd =~ /^\/8ball$/) {
+            ask_ball($token, $chat, $args, $id);
+        }
+        elsif ($cmd =~ /^\/(ud|urbandict|dictionary)$/) {
+            urban_dictionary($token, $chat, $args, $id);
+        }
+        else {
+            send_message($token, $chat, "Unknown command.", $id);
+        }
+    } else {
+        if ($text =~ /\bkms\b/) {
+            suicide_prevention($token, $chat, $msg->{from}->{username}, $id);
+        }
     }
 }
 
