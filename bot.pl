@@ -8,7 +8,6 @@
 use strict;
 use warnings;
 use JSON;
-use LWP::UserAgent;
 
 require "./tg.pl";
 

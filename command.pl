@@ -3,6 +3,13 @@ use warnings;
 
 require "./tg.pl";
 
+our $help_str = 
+"-Commands available-
+/msgcount
+/8ball
+/ud
+/owofy";
+
 sub ask_ball
 {
     my ($token, $chat, $args, $id) = @_;

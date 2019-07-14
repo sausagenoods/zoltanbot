@@ -36,10 +36,11 @@ sub get_updates
             print $message->{text};
             handlers($token, $chat, $message);                    
         }
-
         $offset = $update->{update_id}+1;
     }
 }
+
+our $help_str;
 
 sub handlers
 {
@@ -50,9 +51,10 @@ sub handlers
     my $text = $msg->{text};
 
     if (defined($type) && $type eq "bot_command") {
-
-        my ($cmd, $args) = split(' ', $text, 2);
         
+        my ($cmd, $args) = split(' ', $text, 2);
+        $cmd =~ s/@.*//;
+
         if ($cmd =~ /^\/msgcount$/) {
             send_message($token, $chat, $id, $id);
         }
@@ -64,6 +66,9 @@ sub handlers
         }
         elsif ($cmd =~ /^\/owofy$/) {
             owofy($token, $chat, $args, $id);
+        }
+        elsif ($cmd =~ /^\/help$/) {
+            send_message($token, $chat, $help_str, $id);
         }
         else {
             send_message($token, $chat, "Unknown command.", $id);
