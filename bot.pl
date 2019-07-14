@@ -1,4 +1,9 @@
 #!/usr/bin/perl
+#                          _
+# Author: Winterlinn     ('v')
+# Kernal Community      //-=-\\
+# 2017 - 2019           (\_=_/)
+#                        ^^ ^^  apx
 
 use strict;
 use warnings;

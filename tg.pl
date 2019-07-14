@@ -24,19 +24,20 @@ sub get_updates
     my ($token, $chat) = @_;
     my $method = "getUpdates";
     my $url = "${base_url}bot${token}/${method}?offset=${offset}";
-    my $updates = get($url);
+    my $updates = get($url); 
     my $json = decode_json($updates);
     
     for my $update (@{$json->{result}}) {
         
         my $message = $update->{message};
         my $chat_id = $message->{chat}->{id};
-        
+    
         if (defined($chat_id) && $chat_id == $chat) {
-            handlers($token, $chat, $message);
-         
-            $offset = $update->{update_id}+1;
+            print $message->{text};
+            handlers($token, $chat, $message);                    
         }
+
+        $offset = $update->{update_id}+1;
     }
 }
 
@@ -60,6 +61,9 @@ sub handlers
         }
         elsif ($cmd =~ /^\/(ud|urbandict|dictionary)$/) {
             urban_dictionary($token, $chat, $args, $id);
+        }
+        elsif ($cmd =~ /^\/owofy$/) {
+            owofy($token, $chat, $args, $id);
         }
         else {
             send_message($token, $chat, "Unknown command.", $id);

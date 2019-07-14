@@ -62,6 +62,26 @@ sub urban_dictionary
     }
 }
 
+sub owofy
+{
+    my ($token, $chat, $args, $id) = @_;
+
+    if (!defined $args) {
+        send_message($token, $chat, "Nyothing to owofy (^ ^;)", $id);
+    }
+    else {
+        my %map = (
+        'r' => 'w',
+        'l' => 'w',
+        'n' => 'ny'
+        );
+
+        my $chars = join '|', keys %map;
+        $args =~ s/($chars)/$map{lc $1}/ig;
+        send_message($token, $chat, $args, $id);
+    }
+}
+
 sub suicide_prevention
 {
     my ($token, $chat, $uname, $id) = @_;
