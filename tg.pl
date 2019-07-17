@@ -50,7 +50,7 @@ sub handlers
     my $type = $msg->{entities}[0]->{type};
     my $text = $msg->{text};
 
-    if (defined($type) && $type eq "bot_command") {
+    if (defined($type) && $type eq "bot_command" && $text =~ /^\//) {
         
         my ($cmd, $args) = split(' ', $text, 2);
         $cmd =~ s/@.*//;
