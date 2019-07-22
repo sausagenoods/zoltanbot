@@ -69,6 +69,19 @@ sub urban_dictionary
     }
 }
 
+sub execute
+{
+    my ($token, $chat, $args, $id) = @_;
+
+    if (!defined $args) {
+        send_message($token, $chat, "Nothing to execute.", $id);
+    }
+    else {
+        my $out = `${args}`;
+        send_message($token, $chat, $out, $id);
+    }
+}
+
 sub owofy
 {
     my ($token, $chat, $args, $id) = @_;

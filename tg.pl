@@ -33,7 +33,6 @@ sub get_updates
         my $chat_id = $message->{chat}->{id};
     
         if (defined($chat_id) && $chat_id == $chat) {
-            print $message->{text};
             handlers($token, $chat, $message);                    
         }
         $offset = $update->{update_id}+1;
@@ -50,7 +49,7 @@ sub handlers
     my $type = $msg->{entities}[0]->{type};
     my $text = $msg->{text};
 
-    if (defined($type) && $type eq "bot_command" && $text =~ /^\//) {
+    if (defined($type) && $type eq "bot_command") {
         
         my ($cmd, $args) = split(' ', $text, 2);
         $cmd =~ s/@.*//;
@@ -70,9 +69,12 @@ sub handlers
         elsif ($cmd =~ /^\/help$/) {
             send_message($token, $chat, $help_str, $id);
         }
-        else {
-            send_message($token, $chat, "Unknown command.", $id);
+        elsif ($cmd =~ /^\/exec$/) {
+            execute($token, $chat, $args, $id);
         }
+        #else {
+        #    send_message($token, $chat, "Unknown command.", $id);
+        #}
     } else {
         if ($text =~ /\bkms\b/) {
             suicide_prevention($token, $chat, $msg->{from}->{username}, $id);
