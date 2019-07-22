@@ -8,7 +8,8 @@ our $help_str =
 /msgcount
 /8ball
 /ud
-/owofy";
+/owofy
+/exec";
 
 sub ask_ball
 {
