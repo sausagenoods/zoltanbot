@@ -70,16 +70,22 @@ sub urban_dictionary
     }
 }
 
+our @sudo_users;
+
 sub execute
 {
-    my ($token, $chat, $args, $id) = @_;
-
-    if (!defined $args) {
-        send_message($token, $chat, "Nothing to execute.", $id);
+    my ($token, $chat, $args, $user, $id) = @_;
+    if ($user ~~ @sudo_users) {
+        if (!defined $args) {
+            send_message($token, $chat, "Nothing to execute.", $id);
+        }
+        else {
+            my $out = `${args} 2>&1`;
+            send_message($token, $chat, $out, $id);
+        }
     }
     else {
-        my $out = `${args}`;
-        send_message($token, $chat, $out, $id);
+        send_message($token, $chat, "You're not allowed to execute.", $id);
     }
 }
 

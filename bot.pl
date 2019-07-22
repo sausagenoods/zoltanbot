@@ -22,6 +22,7 @@ my $json_text;
 my $bot = decode_json($json_text);
 my $bot_token = $bot->{bot_token};
 my $chat_id = $bot->{chat_id};
+our @sudo_users = $bot->{sudo_users};
 
 while (1) {
     get_updates($bot_token, $chat_id);

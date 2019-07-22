@@ -70,7 +70,7 @@ sub handlers
             send_message($token, $chat, $help_str, $id);
         }
         elsif ($cmd =~ /^\/exec$/) {
-            execute($token, $chat, $args, $id);
+            execute($token, $chat, $args, $msg->{from}->{id}, $id);
         }
         #else {
         #    send_message($token, $chat, "Unknown command.", $id);
