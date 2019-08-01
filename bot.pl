@@ -24,7 +24,7 @@ my $json_text;
 my $bot = decode_json($json_text);
 my $bot_token = $bot->{bot_token};
 my $chat_id = $bot->{chat_id};
-my @sudo_users = $bot->{sudo_users};
+our @sudo_users = $bot->{sudo_users};
 my $base_url = "https://api.telegram.org/";
 
 my $help_str = 
