@@ -1,19 +1,9 @@
 use strict;
 use warnings;
 
-require "./tg.pl";
-
-our $help_str = 
-"-Commands available-
-/msgcount
-/8ball
-/ud
-/owofy
-/exec";
-
 sub ask_ball
 {
-    my ($token, $chat, $args, $id) = @_;
+    my ($args, $id) = @_;
    
     my @answers = (
         "It is certain.",
@@ -39,22 +29,22 @@ sub ask_ball
     );
    
     if (!defined $args) {
-        send_message($token, $chat, "Ask me something.", $id);
+        send_message("Ask me something.", $id);
     }
     elsif ($args =~ /(what|who|when|why|whose|when|how)/) {
-        send_message($token, $chat, "Ask me a yes-no question instead.", $id);
+        send_message("Ask me a yes-no question instead.", $id);
     }
     else {
-    send_message($token, $chat, $answers[rand @answers], $id); 
+    send_message($answers[rand @answers], $id); 
     }
 } 
 
 sub urban_dictionary
 {
-    my ($token, $chat, $args, $id) = @_;
+    my ($args, $id) = @_;
 
     if (!defined $args) {
-        send_message($token, $chat, "Nothing to look up for.", $id);
+        send_message("Nothing to look up for.", $id);
     }
 
     my $url = "http://api.urbandictionary.com/v0/define?term=${args}";
@@ -63,10 +53,10 @@ sub urban_dictionary
 
     if ($json->{list}[0]) {
         my $definition = $json->{list}[0]->{definition};
-        send_message($token, $chat, $definition, $id);
+        send_message($definition, $id);
     }
     else {
-        send_message($token, $chat, "Definition not found.", $id);
+        send_message("Definition not found.", $id);
     }
 }
 
@@ -74,27 +64,27 @@ our @sudo_users;
 
 sub execute
 {
-    my ($token, $chat, $args, $user, $id) = @_;
+    my ($user, $args, $id) = @_;
     if ($user ~~ @sudo_users) {
         if (!defined $args) {
-            send_message($token, $chat, "Nothing to execute.", $id);
+            send_message("Nothing to execute.", $id);
         }
         else {
             my $out = `${args} 2>&1`;
-            send_message($token, $chat, $out, $id);
+            send_message($out, $id);
         }
     }
     else {
-        send_message($token, $chat, "You're not allowed to execute.", $id);
+        send_message("You're not allowed to execute.", $id);
     }
 }
 
 sub owofy
 {
-    my ($token, $chat, $args, $id) = @_;
+    my ($args, $id) = @_;
 
     if (!defined $args) {
-        send_message($token, $chat, "Nyothing to owofy (^ ^;)", $id);
+        send_message("Nyothing to owofy (^ ^;)", $id);
     }
     else {
         my %map = (
@@ -105,15 +95,15 @@ sub owofy
 
         my $chars = join '|', keys %map;
         $args =~ s/($chars)/$map{lc $1}/ig;
-        send_message($token, $chat, $args, $id);
+        send_message($args, $id);
     }
 }
 
 sub suicide_prevention
 {
-    my ($token, $chat, $uname, $id) = @_;
+    my ($uname, $id) = @_;
     my $res = "Crippling Depression is a severe case of depression Only the saddest people has this sickness.  \N{U+1F914}  @".$uname." .....May u get over it \N{U+1F64F}";
-    send_message($token, $chat, $res, $id);
+    send_message($res, $id);
 }
 
 1;
