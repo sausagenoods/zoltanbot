@@ -90,6 +90,9 @@ sub handlers
         elsif ($cmd =~ /^\/owofy$/) {
             owofy($args, $id);
         }
+        elsif ($cmd =~ /^\/corpus$/) {
+            to_corpus($args, $id);
+        }
         elsif ($cmd =~ /^\/help$/) {
             send_message($help_str, $id);
         }

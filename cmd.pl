@@ -99,6 +99,42 @@ sub owofy
     }
 }
 
+sub to_corpus
+{
+    my ($args, $id) = @_;
+
+    if (!defined $args) {
+        send_message("You don't know the true power of the Void, it seems.", $id);
+    }
+    else {
+        my %map = (
+        'b' => 't',
+        'c' => 'y',
+        'd' => 'p',
+        'f' => 't',
+        'g' => 'j',
+        'h' => 'k',
+        'j' => 't',
+        'l' => 'p',
+        'm' => 's',
+        'n' => 't',
+        'p' => 'k',
+        'q' => 'r',
+        'r' => 't',
+        's' => 'y',
+        't' => 'p',
+        'v' => 't',
+        'w' => 'j',
+        'x' => 'k',
+        'z' => 'b'
+        );
+
+        my $chars = join '|', keys %map;
+        $args =~ s/($chars)/$map{lc $1}/ig;
+        send_message($args, $id);
+    }
+}
+
 sub suicide_prevention
 {
     my ($uname, $id) = @_;
