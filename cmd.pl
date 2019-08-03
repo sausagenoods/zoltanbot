@@ -142,4 +142,18 @@ sub suicide_prevention
     send_message($res, $id);
 }
 
+sub slaep
+{
+    my ($uname, $id) = @_;
+    my $res = "@".$uname."  did it happened to u also when u go to bed pretty hard to shut the brain from thinking random thoughts";
+    send_message($res, $id);
+}
+
+sub bleed 
+{ 
+    my ($id) = @_;
+    my $res = "I did the fap too hard now my peepee bleed \N{U+1F614}";
+    send_message($res, $id);
+}
+
 1;

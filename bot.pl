@@ -33,7 +33,10 @@ my $help_str =
 /8ball
 /ud
 /owofy
-/exec";
+/corpus
+/exec
+/slaep
+/bleed";
                                            
 sub send_message
 {
@@ -71,6 +74,7 @@ sub handlers
 
     my $id = $msg->{message_id};
     my $type = $msg->{entities}[0]->{type};
+    my $uname = $msg->{from}->{username};
     my $text = $msg->{text};
 
     if (defined($type) && $type eq "bot_command") {
@@ -99,12 +103,18 @@ sub handlers
         elsif ($cmd =~ /^\/exec$/) {
             execute($msg->{from}->{id}, $args, $id);
         }
+        elsif ($cmd =~ /^\/slaep$/) {
+            slaep($uname, $id);
+        }
+        elsif ($cmd =~ /^\/bleed/) {
+            bleed($id);
+        } 
         #else {
         #    send_message("Unknown command.", $id);
         #}
     } else {
-        if ($text =~ /\bkms\b/) {
-            suicide_prevention($msg->{from}->{username}, $id);
+        if (defined($text) && $text =~ /\bkms\b/) {
+            suicide_prevention($uname, $id);
         }
     }
 }
