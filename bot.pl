@@ -56,15 +56,17 @@ sub get_updates
     my $updates = get($url);
     my $json = decode_json($updates);
 
-    for my $update (@{$json->{result}}) {
+    if (length($json) > 0) {
+        for my $update (@{$json->{result}}) {
 
-        my $message = $update->{message};
-        my $chat = $message->{chat}->{id};
+            my $message = $update->{message};
+            my $chat = $message->{chat}->{id};
 
-        if (defined($chat) && $chat_id == $chat) {
-            handlers($message);
+            if (defined($chat) && $chat_id == $chat) {
+                handlers($message);
+            }
+            $offset = $update->{update_id}+1;
         }
-        $offset = $update->{update_id}+1;
     }
 }
 
