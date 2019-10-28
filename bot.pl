@@ -7,6 +7,7 @@
 
 use strict;
 use warnings;
+# use lib '/home/kernal/perl5/lib/perl5';
 use JSON;
 use LWP::UserAgent qw( );
 use LWP::Simple;
@@ -54,18 +55,20 @@ sub get_updates
     my $method = "getUpdates";
     my $url = "${base_url}bot${bot_token}/${method}?offset=${offset}";
     my $updates = get($url);
-    my $json = decode_json($updates);
+    if (length($updates) > 0) {
+        my $json = decode_json($updates);
 
-    if (length($json) > 0) {
-        for my $update (@{$json->{result}}) {
+        if (length($json) > 0) {
+            for my $update (@{$json->{result}}) {
 
-            my $message = $update->{message};
-            my $chat = $message->{chat}->{id};
+                my $message = $update->{message};
+                my $chat = $message->{chat}->{id};
 
-            if (defined($chat) && $chat_id == $chat) {
-                handlers($message);
+                if (defined($chat) && $chat_id == $chat) {
+                    handlers($message);
+                }
+                $offset = $update->{update_id}+1;
             }
-            $offset = $update->{update_id}+1;
         }
     }
 }
