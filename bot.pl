@@ -7,7 +7,7 @@
 
 use strict;
 use warnings;
-# use lib '/home/kernal/perl5/lib/perl5';
+use lib '/home/siren/perl5/lib/perl5';
 use JSON;
 use LWP::UserAgent qw( );
 use LWP::Simple;
@@ -37,7 +37,8 @@ my $help_str =
 /corpus
 /exec
 /slaep
-/bleed";
+/bleed
+/synth";
                                            
 sub send_message
 {
@@ -46,6 +47,15 @@ sub send_message
     my $url = "${base_url}bot${bot_token}/${method}?reply_to_message_id=${msg_id}";
     my $ua = LWP::UserAgent->new();
     my $response = $ua->post($url, [chat_id => $chat_id, text => $message]);
+}
+
+sub send_file
+{
+    my ($file, $msg_id) = @_;
+    my $method = "sendDocument";
+    my $url = "${base_url}bot${bot_token}/${method}?reply_to_message_id=${msg_id}";
+    my $ua = LWP::UserAgent->new();
+    my $response = $ua->post($url, Content_Type => 'form-data', Content => ["chat_id" => $chat_id, "document" => ["$file"]]);
 }
 
 my $offset = 0;
@@ -114,7 +124,10 @@ sub handlers
         elsif ($cmd =~ /^\/bleed/) {
             bleed($id);
         } 
-        #else {
+        elsif ($cmd =~ /^\/synth/) {
+            synth($args, $id);
+	}
+	#else {
         #    send_message("Unknown command.", $id);
         #}
     } else {

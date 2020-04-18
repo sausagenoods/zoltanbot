@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use FileHandle;
 
 sub ask_ball
 {
@@ -154,6 +155,16 @@ sub bleed
     my ($id) = @_;
     my $res = "I did the fap too hard now my peepee bleed \N{U+1F614}";
     send_message($res, $id);
+}
+
+sub synth
+{
+    my ($arg, $id) = @_;
+    system("~/turkce-formant-konusma-sentezleyici/bin/linux/synth -s $arg -o out.wav");
+    system("ffmpeg -i out.wav -vn -ar 44100 -ac 2 -b:a 192k out.mp3");
+    my $file = "/home/siren/zoltanbot/out.mp3";
+    send_file($file, $id);
+    system("rm out.mp3");
 }
 
 1;
