@@ -2,12 +2,12 @@
 #                          _
 # Author: Winterlinn     ('v')
 # Kernal Community      //-=-\\
-# 2017 - 2019           (\_=_/)
+# 2017 - 2020           (\_=_/)
 #                        ^^ ^^  apx
 
 use strict;
 use warnings;
-use lib '/home/siren/perl5/lib/perl5';
+use lib '/home/void/perl5/lib/perl5';
 use JSON;
 use LWP::UserAgent qw( );
 use LWP::Simple;
@@ -26,7 +26,12 @@ my $bot = decode_json($json_text);
 my $bot_token = $bot->{bot_token};
 my $chat_id = $bot->{chat_id};
 our @sudo_users = $bot->{sudo_users};
+my @modules = $bot->{modules};
 my $base_url = "https://api.telegram.org/";
+
+my $synth = "synth" ~~ @modules ? 1 : 0;
+my $markov = "markov" ~~ @modules ? 1 : 0;
+our $shh = $markov ? 1 : 0;
 
 my $help_str = 
 "-Commands available-
@@ -38,8 +43,9 @@ my $help_str =
 /exec
 /slaep
 /bleed
-/synth";
-                                           
+/synth
+/shh";
+                                      
 sub send_message
 {
     my ($message, $msg_id) = @_;
@@ -58,6 +64,14 @@ sub send_file
     my $response = $ua->post($url, Content_Type => 'form-data', Content => ["chat_id" => $chat_id, "document" => ["$file"]]);
 }
 
+sub send_typing
+{
+    my $method = "sendChatAction";
+    my $url = "${base_url}bot${bot_token}/${method}?action=typing&chat_id=${chat_id}";
+    my $ua = LWP::UserAgent->new();
+    my $action = $ua->post($url);
+}
+
 my $offset = 0;
 
 sub get_updates
@@ -65,7 +79,7 @@ sub get_updates
     my $method = "getUpdates";
     my $url = "${base_url}bot${bot_token}/${method}?offset=${offset}";
     my $updates = get($url);
-    if (length($updates) > 0) {
+    if ($updates) {
         my $json = decode_json($updates);
 
         if (length($json) > 0) {
@@ -123,19 +137,27 @@ sub handlers
         }
         elsif ($cmd =~ /^\/bleed/) {
             bleed($id);
-        } 
-        elsif ($cmd =~ /^\/synth/) {
+        }
+        elsif ($cmd =~ /^\/shh$/ && $markov) {
+	        $shh ^= 1;
+        }	    
+	    elsif ($cmd =~ /^\/synth/ && $synth) {
             synth($args, $id);
-	}
-	#else {
+	    }
+        #else {
         #    send_message("Unknown command.", $id);
         #}
     } else {
         if (defined($text) && $text =~ /\bkms\b/) {
             suicide_prevention($uname, $id);
         }
+	elsif (defined($text) && $markov) {
+	    markov($text, $id);    
+    	}
     }
 }
+
+get("${base_url}bot${bot_token}/getUpdates?offset=-1");
 
 while (1) {
     get_updates($bot_token, $chat_id);

@@ -2,5 +2,6 @@
     "_usage": "create a file named config.json with the following elements filled in",
     "chat_id": "-1234567891234",
     "bot_token": "123456789:AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-    "sudo_users": []
+    "sudo_users": [],
+    "modules": ["markov", "synth"]
 }

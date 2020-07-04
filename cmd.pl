@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use FileHandle;
+use IPC::Open2;
 
 sub ask_ball
 {
@@ -165,6 +166,32 @@ sub synth
     my $file = "/home/siren/zoltanbot/out.mp3";
     send_file($file, $id);
     system("rm out.mp3");
+}
+
+our $shh;
+my ($chld_out, $chld_in, $cout, $cin);
+my $pid = open2($chld_out, $chld_in, '/home/void/kernmocker/edited') 
+    or die "Can't open process: $!\n";
+binmode($chld_in, "encoding(UTF-8)");
+
+sub markov
+{
+    my ($arg, $id) = @_;
+    print $chld_in "$arg\n";
+    my $got = <$chld_out>;
+    
+    if ($shh == 0) {
+        if (($arg =~ /zoltan/i) && (defined $got)) {
+            send_typing();
+	        send_message("$got\n", $id);
+        }
+        elsif ((int rand(8) % 5 == 0) && (defined $got)) {
+            send_typing();
+	        send_message("$got\n", $id);
+        }
+    }
+
+    undef $got;
 }
 
 1;
