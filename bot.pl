@@ -1,13 +1,13 @@
 #!/usr/bin/perl
 #                          _
-# Author: Winterlinn     ('v')
+# Author: Siren          ('v')
 # Kernal Community      //-=-\\
-# 2017 - 2020           (\_=_/)
+# 2017 - 2021           (\_=_/)
 #                        ^^ ^^  apx
 
 use strict;
 use warnings;
-use lib '/home/void/perl5/lib/perl5';
+# use lib '/home/void/perl5/lib/perl5';
 use JSON;
 use LWP::UserAgent qw( );
 use LWP::Simple;
@@ -33,7 +33,7 @@ my $synth = "synth" ~~ @modules ? 1 : 0;
 my $markov = "markov" ~~ @modules ? 1 : 0;
 our $shh = $markov ? 1 : 0;
 
-my $help_str = 
+my $help_str =
 "-Commands available-
 /msgcount
 /8ball
@@ -45,7 +45,7 @@ my $help_str =
 /bleed
 /synth
 /shh";
-                                      
+
 sub send_message
 {
     my ($message, $msg_id) = @_;
@@ -140,7 +140,7 @@ sub handlers
         }
         elsif ($cmd =~ /^\/shh$/ && $markov) {
 	        $shh ^= 1;
-        }	    
+        }
 	    elsif ($cmd =~ /^\/synth/ && $synth) {
             synth($args, $id);
 	    }
@@ -152,7 +152,7 @@ sub handlers
             suicide_prevention($uname, $id);
         }
 	elsif (defined($text) && $markov) {
-	    markov($text, $id);    
+	    markov($text, $id);
     	}
     }
 }
