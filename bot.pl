@@ -30,7 +30,7 @@ my @modules = $bot->{modules};
 my $base_url = "https://api.telegram.org/";
 
 my $synth = "synth" ~~ @modules ? 1 : 0;
-my $markov = "markov" ~~ @modules ? 1 : 0;
+our $markov = "markov" ~~ @modules ? 1 : 0;
 our $shh = $markov ? 1 : 0;
 
 my $help_str =
@@ -44,7 +44,8 @@ my $help_str =
 /slaep
 /bleed
 /synth
-/shh";
+/shh
+/rules";
 
 sub send_message
 {
@@ -138,12 +139,15 @@ sub handlers
         elsif ($cmd =~ /^\/bleed/) {
             bleed($id);
         }
-        elsif ($cmd =~ /^\/shh$/ && $markov) {
+        elsif ($cmd =~ /^\/rules/) {
+	    rules($id);
+        }
+	elsif ($cmd =~ /^\/shh$/ && $markov) {
 	        $shh ^= 1;
         }
-	    elsif ($cmd =~ /^\/synth/ && $synth) {
+	elsif ($cmd =~ /^\/synth/ && $synth) {
             synth($args, $id);
-	    }
+	}
         #else {
         #    send_message("Unknown command.", $id);
         #}

@@ -6,7 +6,7 @@ use IPC::Open2;
 sub ask_ball
 {
     my ($args, $id) = @_;
-   
+
     my @answers = (
         "It is certain.",
         "It is decidedly so.",
@@ -29,7 +29,7 @@ sub ask_ball
         "Outlook not so good.",
         "Very doubtful."
     );
-   
+
     if (!defined $args) {
         send_message("Ask me something.", $id);
     }
@@ -37,9 +37,9 @@ sub ask_ball
         send_message("Ask me a yes-no question instead.", $id);
     }
     else {
-    send_message($answers[rand @answers], $id); 
+    send_message($answers[rand @answers], $id);
     }
-} 
+}
 
 sub urban_dictionary
 {
@@ -151,11 +151,24 @@ sub slaep
     send_message($res, $id);
 }
 
-sub bleed 
-{ 
+sub bleed
+{
     my ($id) = @_;
     my $res = "I did the fap too hard now my peepee bleed \N{U+1F614}";
     send_message($res, $id);
+}
+
+sub rules
+{
+    my ($id) = @_;
+
+    if (open(my $fh, '<', "rules.txt")) {
+        read $fh, my $rules, -s $fh;
+	send_message($rules, $id);
+    }
+    else {
+        send_message("No rule string set.", $id);
+    }
 }
 
 sub synth
@@ -169,17 +182,21 @@ sub synth
 }
 
 our $shh;
+our $markov;
 my ($chld_out, $chld_in, $cout, $cin);
-my $pid = open2($chld_out, $chld_in, '/home/void/kernmocker/edited') 
-    or die "Can't open process: $!\n";
-binmode($chld_in, "encoding(UTF-8)");
+
+if ($markov) {
+    my $pid = open2($chld_out, $chld_in, '/home/void/kernmocker/edited')
+        or die "Can't open process: $!\n";
+    binmode($chld_in, "encoding(UTF-8)");
+}
 
 sub markov
 {
     my ($arg, $id) = @_;
     print $chld_in "$arg\n";
     my $got = <$chld_out>;
-    
+
     if ($shh == 0) {
         if (($arg =~ /zoltan/i) && (defined $got)) {
             send_typing();
