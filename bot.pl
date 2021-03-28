@@ -7,9 +7,10 @@
 
 use strict;
 use warnings;
-# use lib '/home/void/perl5/lib/perl5';
+#use lib '/home/siren/perl5/lib/perl5';
 use JSON;
 use LWP::UserAgent qw( );
+use LWP::Protocol::https;
 use LWP::Simple;
 
 require "./cmd.pl";
